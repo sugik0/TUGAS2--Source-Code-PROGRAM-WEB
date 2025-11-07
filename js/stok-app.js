@@ -8,8 +8,6 @@ var app = new Vue ({
       filterKategori: '',
       filterHanyaMenipis: false,
       urutkanBerdasarkan: 'judul',
-
-
       isModalBuka: false,
       modeModal: 'tambah',
       bukuForm: {
@@ -38,11 +36,7 @@ var app = new Vue ({
   computed: {
 
         stokTampil: function() {
-            // 1. BUAT SALINAN DARI 'this.stok' DENGAN .slice()
-            // 'daftar' sekarang adalah array baru yang aman untuk di-filter & sort
             let daftar = this.stok.slice(); 
-
-            // 2. Terapkan filter (ini sudah benar)
             if (this.filterLokasi) {
                 daftar = daftar.filter(buku => buku.upbjj === this.filterLokasi);
             }
@@ -52,8 +46,6 @@ var app = new Vue ({
             if (this.filterHanyaMenipis) {
                 daftar = daftar.filter(buku => buku.qty < buku.safety || buku.qty === 0);
             }
-            
-            // 3. Terapkan sort (ini sudah benar)
             if (this.urutkanBerdasarkan === 'judul') {
                 daftar.sort((a, b) => a.judul.localeCompare(b.judul));
             } else if (this.urutkanBerdasarkan === 'harga') {
@@ -61,8 +53,6 @@ var app = new Vue ({
             } else if (this.urutkanBerdasarkan === 'stok') {
                 daftar.sort((a, b) => a.qty - b.qty);
             }
-            
-            // 4. Kembalikan array yang sudah diolah
             return daftar;
         },
 
@@ -92,19 +82,12 @@ var app = new Vue ({
 
             axios.get('api/api-buku.php')
                 .then(function (response) {
-
-                    // --- TAMBAHKAN BARIS INI ---
-                    console.log("API Berhasil! Data yang diterima:", response.data); 
-
                     vm.stok = response.data; 
                     vm.isLoading = false;
                 })
                 .catch(function (error) {
-                    // --- TAMBAHKAN BARIS INI ---
-                    console.error("API GAGAL:", error); 
-
-                    vm.error = "Gagal memuat data buku dari server.";
-                    vm.isLoading = false;
+                vm.error = "Gagal memuat data buku dari server.";
+                vm.isLoading = false;
                 });
         },
 
@@ -128,7 +111,6 @@ var app = new Vue ({
 
       bukaModeTambah: function() {
           this.modeModal = 'tambah';
-          // Reset form ke kondisi kosong
           this.bukuForm = { 
                       kode: '',
                       judul: '',
@@ -148,15 +130,8 @@ var app = new Vue ({
 
       bukaModeEdit: function(buku) {
             this.modeModal = 'edit';
-            
-            // Simpan referensi ke buku *asli*
             this.bukuYangDiedit = buku; 
-            
-            // PENTING: Salin data buku ke 'bukuForm'
-            // Kita pakai Object.assign({}, ...) untuk membuat SALINAN data.
-            // Jika tidak disalin, form akan mengedit data asli secara langsung.
-            this.bukuForm = Object.assign({}, buku);
-            
+            this.bukuForm = Object.assign({}, buku);          
             this.isModalBuka = true;
         },
       tutupModal: function() {
@@ -164,36 +139,25 @@ var app = new Vue ({
         },
 
       simpanForm: function() {
-          // 1. Validasi Sederhana
           if (!this.bukuForm.kode || !this.bukuForm.judul) {
               alert('Kode dan Judul wajib diisi!');
               return;
           }
 
           if (this.modeModal === 'tambah') {
-              // --- LOGIKA TAMBAH BARU ---
-              
-              // Cek duplikat kode
               const duplikat = this.stok.find(b => b.kode === this.bukuForm.kode);
               if (duplikat) {
                   alert('Kode buku sudah ada! Gunakan kode lain.');
                   return;
               }
-              
-              // Tambahkan data baru (sebagai salinan) ke array 'stok'
               this.stok.push(Object.assign({}, this.bukuForm));
               alert('Data buku baru berhasil ditambahkan!');
 
           } else {
-              // --- LOGIKA EDIT ---
-              
-              // Salin nilai dari 'bukuForm' (yang ada di form)
-              // ke 'bukuYangDiedit' (data asli di array 'stok').
               Object.assign(this.bukuYangDiedit, this.bukuForm);
               alert('Data buku berhasil diperbarui!');
           }
           
-          // Tutup modal setelah selesai
           this.tutupModal();
       }
 

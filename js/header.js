@@ -68,52 +68,36 @@ document.addEventListener('DOMContentLoaded', function() {
   
   setInterval(updateClock, 1000);
 
-function muatCuacaSederhana() {
-    // Ambil elemen "wadah" yang kita buat di HTML
-    const widgetCuaca = document.getElementById("cuaca-widget");
-    if (!widgetCuaca) return; // Keluar jika elemen tidak ada
+  function muatCuacaSederhana() {
+      const widgetCuaca = document.getElementById("cuaca-widget");
+      if (!widgetCuaca) return;
 
-    const urlApi = 'https://wttr.in/?format=4'; 
+      const urlApi = 'https://wttr.in/?format=4'; 
 
-    fetch(urlApi)
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(dataTeks) {
-        // dataTeks = "Klungkung, Indonesia: ⛅️ 🌡️+30°C 🌬️→4km/h"
-        
-        // 1. Pecah string di tanda ': '
-        const parts = dataTeks.split(': ');
+      fetch(urlApi)
+        .then(function(response) {
+          return response.text();
+        })
+        .then(function(dataTeks) {
+          const parts = dataTeks.split(': ');
 
-        if (parts.length === 2) {
-          // parts[0] = "Klungkung, Indonesia"
-          // parts[1] = "⛅️ 🌡️+30°C 🌬️→4km/h"
-          const lokasi = parts[0];
-          const detailCuaca = parts[1];
+          if (parts.length === 2) {
+            const lokasi = parts[0];
+            const detailCuaca = parts[1];
+            const htmlBaru = `
+              <span class="cuaca-lokasi">${lokasi}</span>
+              <span class="cuaca-detail">${detailCuaca}</span>
+            `;
+            widgetCuaca.innerHTML = htmlBaru;
 
-          // 2. Buat HTML baru dengan <span> dan class
-          const htmlBaru = `
-            <span class="cuaca-lokasi">${lokasi}</span>
-            <span class="cuaca-detail">${detailCuaca}</span>
-          `;
-
-          // 3. Gunakan .innerHTML untuk memasukkan HTML baru
-          widgetCuaca.innerHTML = htmlBaru;
-
-        } else {
-          // Fallback jika formatnya aneh
-          widgetCuaca.textContent = dataTeks; 
-        }
-      })
-      .catch(function(error) {
-        console.error("Gagal memuat cuaca:", error);
-        widgetCuaca.textContent = "Gagal memuat cuaca";
-      });
-  }
-
-  // Panggil fungsi (kode ini sudah ada)
-  muatCuacaSederhana();
-
-
-
+          } else {
+            widgetCuaca.textContent = dataTeks; 
+          }
+        })
+        .catch(function(error) {
+          console.error("Gagal memuat cuaca:", error);
+          widgetCuaca.textContent = "Gagal memuat cuaca";
+        });
+    }
+    muatCuacaSederhana();
 }); 
