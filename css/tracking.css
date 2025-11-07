@@ -91,3 +91,66 @@
   color: #555;
   font-size: 0.95rem;
 }
+
+/* 1. Style untuk Judul Form (disalin dari stok.css) */
+#formTambahDO h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem; 
+  text-align: center;
+  color: #004a99;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f0f0f0; 
+  padding-bottom: 1rem;
+}
+
+/* 2. Style untuk 'form-group' (dibutuhkan oleh form Anda) */
+.form-group {
+  text-align: left; /* Memastikan label rata kiri */
+  margin-bottom: 1rem; /* Jarak antar grup form */
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 0.5rem; /* Jarak dari label ke input */
+}
+
+/* 3. Style untuk Input & Select (disalin dan diganti ID-nya) */
+#formTambahDO input,
+#formTambahDO select {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 4. Style :focus (disalin dan diganti ID-nya) */
+#formTambahDO input:focus,
+#formTambahDO select:focus {
+  outline: none; 
+  border-color: #004a99;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1);
+}
+
+/* 5. Style untuk Grid & Info Paket (dari HTML Anda) */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.info-paket {
+    background: #f4f4f4; 
+    border: 1px dashed #ccc;
+    padding: 10px; 
+    margin-top: 10px; 
+    border-radius: 5px;
+    text-align: left;
+}

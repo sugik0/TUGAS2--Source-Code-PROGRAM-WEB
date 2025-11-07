@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/header.css">
 </head>
 
-<body>
+<body> <div id="tracking-app">
 
     <header>
         <nav class="main-header-nav">
@@ -40,6 +40,9 @@
 
             <div class="nav-right">
                 <div id="liveClock" class="clock-display"></div>
+                <div id="cuaca-widget">
+                    Memuat cuaca...
+                </div>
                 <img src="img/pp.jpg" alt="Foto Profil" class="profile-pic">
                 <span id="userNameDisplay">...</span>
                 <button id="logoutBtn" class="logout-btn">Logout</button>
@@ -56,58 +59,125 @@
             <div class="banner-content">
                 <h1>Tracking Pengiriman</h1>
                 <p class="subtitle">Lacak status pengiriman Delivery Order (DO) Anda.</p>
-                <form id="trackingForm" class="tracking-form">
-                    <input type="text" id="nomorDO" placeholder="Contoh: 2023001234" required>
+                <form id="trackingForm" class="tracking-form" @submit.prevent="cariDO">
+                    <input type="text" v-model="nomorDoCari" placeholder="Contoh: DO2025-0001" required>
                     <button type="submit" class="search-btn">Cari</button>
                 </form>
+                <button 
+                    class="open-modal-btn" type="button" @click="bukaModalDoBaru">Tambah Data DO Baru
+                </button>
+    
             </div>
 
-            <section class="card" id="trackingResult" style="display: none;">
+            <section class="card" id="trackingResult" v-if="hasilPencarian">
                 <h2>Hasil Pelacakan</h2>
 
                 <div class="result-summary">
                     <div class="summary-item">
                         <label>Nomor Delivery Order</label>
-                        <span id="nomorDOHasil" class="status-badge"></span>
+                        <span id="nomorDOHasil" class="status-badge">{{ nomorDoCari }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Nama Penerima</label>
-                        <span id="namaPenerima"></span>
+                        <span id="namaPenerima">{{ hasilPencarian.nim && hasilPencarian.nama }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Status</label>
-                        <span id="statusPengiriman" class="status-badge"></span>
+                        <span id="statusPengiriman" class="status-badge">{{ hasilPencarian.status }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Ekspedisi</label>
-                        <span id="ekspedisi"></span>
+                        <span id="ekspedisi">{{ hasilPencarian.ekspedisi }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Tanggal Kirim</label>
-                        <span id="tglKirim"></span>
+                        <span id="tglKirim">{{ hasilPencarian.tanggalKirim }}</span>
                     </div>
                     <div class="summary-item">
                         <label>Tanggal Terima</label>
-                        <span id="tglTerima"></span>
+                        <span id="tglTerima">{{ hasilPencarian.tanggalTerima }}</span>
                     </div>
                 </div>
 
                 <h3 style="padding-left: 1.5rem;">Detail Perjalanan</h3>
-                <ul id="listPerjalanan" class="journey-list">
-                </ul>
+                    <ul id="listPerjalanan" class="journey-list">
+                        <li v-for="item in hasilPencarian.perjalanan">
+                            <span class="time">{{ item.waktu }}</span>
+                            <span class="detail">{{ item.keterangan }}</span>
+                        </li>
+                    </ul>
+            </section> 
+            <section class="card" v-if="pencarianGagal">
+                <h2>Hasil Pelacakan</h2>
+                <p>Nomor DO "{{ nomorDoCari }}" tidak ditemukan.</p>
             </section>
+
 
         </section>
 
     </main>
+    <div id="addDoModal" class="modal" v-bind:class="{ 'is-buka': isModalDoBuka }">
+        <div class="modal-content">
+            <span class="close-btn" @click="tutupModalDoBaru">&times;</span>
 
+            <form id="formTambahDO" @submit.prevent="tambahDOBaru">
+                <h2>Tambah Input Delivery Order Baru</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nomor DO (Otomatis)</label>
+                        <input type="text" v-bind:value="nomorDoOtomatis" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="nimBaru">NIM</label>
+                        <input type="text" id="nimBaru" v-model="doBaru.nim" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="namaBaru">Nama</label>
+                        <input type="text" id="namaBaru" v-model="doBaru.nama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ekspedisiBaru">Ekspedisi</label>
+                        <select id="ekspedisiBaru" v-model="doBaru.ekspedisi" required>
+                            <option value="" disabled>Pilih Ekspedisi</option>
+                            <option v-for="item in pengirimanList" v-bind:value="item.nama">
+                                {{ item.nama }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paketBaru">Paket Bahan Ajar</label>
+                        <select id="paketBaru" v-model="doBaru.paketKode" required>
+                            <option value="" disabled>Pilih Paket</option>
+                            <option v-for="item in paket" v-bind:value="item.kode">
+                                {{ item.kode }} - {{ item.nama }}
+                            </option>
+                        </select>
+                        <div class="info-paket" v-if="paketTerpilih">
+                            <strong>Detail Paket:</strong>
+                            <p>Isi: {{ paketTerpilih.isi.join(', ') }}</p>
+                            <p>Harga: Rp {{ paketTerpilih.harga }}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tglKirimBaru">Tanggal Kirim</label>
+                        <input type="date" id="tglKirimBaru" v-model="doBaru.tanggalKirim" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="add-btn">Tambah DO Baru</button>
+            </form>
+        </div>
+    </div>
 
+</div>
     <footer>
         <p>&copy; 2025 Universitas Terbuka by I Putu Sugiarta. Hak Cipta Dilindungi.</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="js/vue.js"></script>
     <script src="js/tracking-app.js"></script>
+    <script src="js/header.js"></script>
 
 </body>
 </html>

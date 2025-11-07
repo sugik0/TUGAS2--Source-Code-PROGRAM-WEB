@@ -40,6 +40,9 @@
 
       <div class="nav-right">
         <div id="liveClock" class="clock-display"></div>
+        <div id="cuaca-widget">
+             Memuat cuaca...
+        </div>
         <img src="img/pp.jpg" alt="Foto Profil" class="profile-pic">
         <span id="userNameDisplay">...</span>
         <button id="logoutBtn" class="logout-btn">Logout</button>
@@ -56,11 +59,7 @@
         <h1>Informasi Bahan Ajar</h1>
         <p class="subtitle">Kelola dan lihat ketersediaan stok bahan ajar di berbagai lokasi.</p>
         <button 
-        id="openAddStokModalBtn" 
-        class="open-modal-btn" 
-        type="button" 
-        @click="bukaModeTambah">
-        Tambah Data Buku Baru
+             class="open-modal-btn" type="button" @click="bukaModeTambah">Tambah Data Buku Baru
         </button>
         <div class="filter-container">
             <h4>Filter dan Urutkan</h4>
@@ -73,8 +72,8 @@
                         <option v-for="lokasi in upbjjList" :value="lokasi">{{ lokasi }}</option>
                     </select>
                 </div>
-                    
-                <div>
+
+                <div v-if="filterLokasi">
                     <label for="filter-kategori">Kategori:</label>
                     <select id="filter-kategori" v-model="filterKategori">
                         <option value="">Semua Kategori</option>
@@ -82,14 +81,14 @@
                     </select>
                 </div>
 
-                <div class="checkbox-group">
+                <div v-if="filterLokasi" class="checkbox-group">
                     <label>
                         <input type="checkbox" v-model="filterHanyaMenipis">
                         Hanya tampilkan stok menipis/kosong
                     </label>
                 </div>
                 
-                <div>
+                <div v-if="filterLokasi">
                     <label for="sort-by">Urutkan Berdasarkan:</label>
                     <select id="sort-by" v-model="urutkanBerdasarkan">
                         <option value="judul">Judul (A-Z)</option>
@@ -129,7 +128,7 @@
                     <div class="book-card-stock" v-bind:class="getStatusClass(buku)">
                       Stok: <span>{{ buku.qty }}</span>
                       <span v-if="buku.qty === 0"> (Kosong)</span>
-                      <span v-else-if="buku.qty < buku.safety"> (Menipis!)</span>
+                      <span v-else-if="buku.qty &lt; buku.safety"> (Menipis!)</span>
                       <span v-else> (Aman)</span>
                     </div>
 

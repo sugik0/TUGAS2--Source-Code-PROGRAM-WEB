@@ -78,8 +78,6 @@ var app = new Vue ({
 
     },
 
-
-
   computed: {
 
       stokTampil: function() {
@@ -110,10 +108,16 @@ var app = new Vue ({
                 return 'Edit Data Stok';
             }
         },
-
-
     },
-    
+
+  watch: {
+    filterLokasi: function(lokasiBaru) {
+        this.filterKategori = '';
+        this.urutkanBerdasarkan = 'judul';
+        this.filterHanyaMenipis = false;
+        },
+    },
+
   methods: {
       getStatusClass: function(buku) {
           
@@ -154,7 +158,6 @@ var app = new Vue ({
       },
 
       bukaModeEdit: function(buku) {
-            console.log("Fungsi bukaModeEdit() DIPANGGIL!");
             this.modeModal = 'edit';
             
             // Simpan referensi ke buku *asli*
@@ -166,7 +169,6 @@ var app = new Vue ({
             this.bukuForm = Object.assign({}, buku);
             
             this.isModalBuka = true;
-            console.log("isModalBuka sekarang:", this.isModalBuka);
         },
       tutupModal: function() {
             this.isModalBuka = false;

@@ -109,3 +109,16 @@ header {
   border-right: 2px solid #ddd;
   white-space: nowrap;
 }
+
+/* Style untuk baris "Klungkung, Indonesia" */
+.cuaca-lokasi {
+  font-weight: 700; /* Cetak tebal */
+  font-size: 0.8rem;
+  color: #004a99; /* Warna biru UT */
+}
+
+/* Style untuk baris "⛅️ 🌡️+30°C..." */
+.cuaca-detail {
+  font-size: 0.6rem;
+  color: #555; /* Warna abu-abu gelap */
+}
