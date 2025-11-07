@@ -55,40 +55,55 @@
       <div class="banner-content">
         <h1>Informasi Bahan Ajar</h1>
         <p class="subtitle">Kelola dan lihat ketersediaan stok bahan ajar di berbagai lokasi.</p>
-        <h4>Filter dan Urutkan</h4>
+        <button 
+        id="openAddStokModalBtn" 
+        class="open-modal-btn" 
+        type="button" 
+        @click="bukaModeTambah">
+        Tambah Data Buku Baru
+        </button>
+        <div class="filter-container">
+            <h4>Filter dan Urutkan</h4>
             <div class="filter-controls">
                 
-                <label for="filter-lokasi">Lokasi (UT-Daerah):</label>
-                <select id="filter-lokasi" v-model="filterLokasi">
-                    <option value="">Semua Lokasi</option>
-                    <option v-for="lokasi in upbjjList" v-bind:value="lokasi">
-                        {{ lokasi }}
-                    </option>
-                </select>
+                <div>
+                    <label for="filter-lokasi">Lokasi (UT-Daerah):</label>
+                    <select id="filter-lokasi" v-model="filterLokasi">
+                        <option value="">Semua Lokasi</option>
+                        <option v-for="lokasi in upbjjList" :value="lokasi">{{ lokasi }}</option>
+                    </select>
+                </div>
+                    
+                <div>
+                    <label for="filter-kategori">Kategori:</label>
+                    <select id="filter-kategori" v-model="filterKategori">
+                        <option value="">Semua Kategori</option>
+                        <option v-for="kategori in kategoriList" :value="kategori">{{ kategori }}</option>
+                    </select>
+                </div>
 
-                <label for="filter-kategori">Kategori:</label>
-                <select id="filter-kategori" v-model="filterKategori">
-                    <option value="">Semua Kategori</option>
-                    <option v-for="kategori in kategoriList" v-bind:value="kategori">
-                        {{ kategori }}
-                    </option>
-                </select>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" v-model="filterHanyaMenipis">
+                        Hanya tampilkan stok menipis/kosong
+                    </label>
+                </div>
+                
+                <div>
+                    <label for="sort-by">Urutkan Berdasarkan:</label>
+                    <select id="sort-by" v-model="urutkanBerdasarkan">
+                        <option value="judul">Judul (A-Z)</option>
+                        <option value="harga">Harga (Termurah)</option>
+                        <option value="stok">Stok (Tersedikit)</option>
+                    </select>
+                </div>
 
-                <label>
-                    <input type="checkbox" v-model="filterHanyaMenipis">
-                    Hanya tampilkan stok menipis/kosong
-                </label>
-
-                <label for="sort-by">Urutkan Berdasarkan:</label>
-                <select id="sort-by" v-model="urutkanBerdasarkan">
-                    <option value="judul">Judul (A-Z)</option>
-                    <option value="harga">Harga (Termurah)</option>
-                    <option value="stok">Stok (Tersedikit)</option>
-                </select>
-
-                <button type="button" @click="resetFilter">Reset Filter</button>
+                <div>
+                    <button type="button" @click="resetFilter">Reset Filter</button>
+                </div>
                 
             </div>
+        </div>  
       </div>
 
       <div class="stok-header-controls">
@@ -97,7 +112,7 @@
           <div id="stokBookGrid" class="stok-grid">
               <article class="book-card" v-for="buku in stokTampil" v-bind:key="buku.kode">
 
-                  <img v-bind:src="buku.cover" v-bind:alt="buku.judul" class="book-card-image" style="width: auto; height: auto;">
+                  <img v-bind:src="buku.cover" v-bind:alt="buku.judul" class="book-card-image">
 
                   <div class="book-card-content">
                     <h3 class="book-card-title">{{ buku.judul }}</h3>
@@ -124,6 +139,10 @@
 
                     <div class="catatan" v-html="buku.catatanHTML"></div>
 
+                    <div class="card-actions">
+                        <button @click="bukaModeEdit(buku)" type="button">Edit</button>
+                    </div>
+
                   </div>
               </article>
           </div>
@@ -134,39 +153,84 @@
 
   </main>
 
-  <div id="addStokModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" id="closeStokModal">&times;</span>
+  <div id="addStokModal" class="modal" v-bind:class="{ 'is-buka': isModalBuka }">
+      <div class="modal-content">
+        
+        <span class="close-btn" @click="tutupModal">&times;</span>
 
-      <form id="addStokForm">
-        <h2>Tambah Data Stok Baru</h2>
+        <form id="addStokForm" @submit.prevent="simpanForm">
+          
+          <h2>{{ judulModal }}</h2>
 
-        <div class="form-group">
-          <label for="kodeLokasi">Kode Lokasi:</label>
-          <input type="text" id="kodeLokasi" required>
-        </div>
-        <div class="form-group">
-          <label for="kodeBarang">Kode Barang:</label>
-          <input type="text" id="kodeBarang" required>
-        </div>
-        <div class="form-group">
-          <label for="namaBarang">Nama Barang:</label>
-          <input type="text" id="namaBarang" required>
-        </div>
-        <div class="form-group">
-          <label for="edisi">Edisi:</label>
-          <input type="number" id="edisi" required>
-        </div>
-        <div class="form-group">
-          <label for="stok">Stok:</label>
-          <input type="number" id="stok" required>
-        </div>
+          <div class="form-group">
+            <label for="kodeBarang">Kode Barang:</label>
+            <input type="text" id="kodeBarang" v-model="bukuForm.kode" 
+                  v-bind:readonly="modeModal === 'edit'" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="namaBarang">Nama Barang (Judul):</label>
+            <input type="text" id="namaBarang" v-model="bukuForm.judul" required>
+          </div>
 
-        <button type="submit" class="add-btn">Tambah Data</button>
-      </form>
+          <div class="form-group">
+            <label for="kategori">Kategori:</label>
+            <select id="kategori" v-model="bukuForm.kategori" required>
+              <option value="" disabled>Pilih Kategori</option>
+              <option v-for="kat in kategoriList" v-bind:value="kat">{{ kat }}</option>
+            </select>
+          </div>
 
+          <div class="form-group">
+            <label for="upbjj">UPBJJ (Lokasi):</label>
+            <select id="upbjj" v-model="bukuForm.upbjj" required>
+              <option value="" disabled>Pilih UPBJJ</option>
+              <option v-for="lok in upbjjList" v-bind:value="lok">{{ lok }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="lokasiRak">Lokasi Rak:</label>
+            <input type="text" id="lokasiRak" v-model="bukuForm.lokasiRak">
+          </div>
+
+          <div class="form-group">
+            <label for="harga">Harga:</label>
+            <input type="number" id="harga" v-model.number="bukuForm.harga" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edisi">Edisi:</label>
+            <input type="number" id="edisi" v-model.number="bukuForm.edisi" required>
+          </div>
+
+          <div class="form-group">
+            <label for="stok">Stok (Qty):</label>
+            <input type="number" id="stok" v-model.number="bukuForm.qty" required>
+          </div>
+
+          <div class="form-group">
+            <label for="safety">Safety Stok:</label>
+            <input type="number" id="safety" v-model.number="bukuForm.safety" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="catatanHTML">Catatan (HTML):</label>
+            <input type="text" id="catatanHTML" v-model="bukuForm.catatanHTML">
+          </div>
+          
+          <div class="form-group">
+            <label for="cover">URL Cover Gambar:</label>
+            <input type="text" id="cover" v-model="bukuForm.cover">
+          </div>
+
+          <button type="submit" class="add-btn">
+            {{ modeModal === 'tambah' ? 'Tambah Data Baru' : 'Simpan Perubahan' }}
+          </button>
+        </form>
+
+      </div>
     </div>
-  </div>
 
   </div>
   <footer>
@@ -176,6 +240,7 @@
   <script src="js/vue.js"></script>
   <script src="js/stok-app.js"></script>
   <script src="js/header.js"></script>
+
 
 </body>
 
