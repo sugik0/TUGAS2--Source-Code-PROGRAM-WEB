@@ -108,21 +108,28 @@
       <div class="stok-header-controls">
         <h2>Daftar Stok Saat Ini</h2>
         <section class="card">
-          <div id="stokBookGrid" class="stok-grid">
-              <article class="book-card" v-for="buku in stokTampil" v-bind:key="buku.kode">
+              <div id="stokBookGrid" class="stok-grid">
 
-                  <img v-bind:src="buku.cover" v-bind:alt="buku.judul" class="book-card-image">
+                  <div v-if="isLoading" style="grid-column: 1 / -1; text-align: center;">
+                      <p>Sedang memuat data buku dari database...</p>
+                  </div>
+                  
+                  <div v-else-if="error" style="grid-column: 1 / -1; text-align: center; color: red;">
+                      <p>{{ error }}</p>
+                  </div>
+
+                  <article class="book-card" v-for="buku in stokTampil" v-bind:key="buku.kode">
+
+                  <img v-bind:src="buku.cover" v-bind:alt="buku.judul" class="book-card-image" style="width: auto; height: auto;">
 
                   <div class="book-card-content">
                     <h3 class="book-card-title">{{ buku.judul }}</h3>
                     
                     <div class="book-card-details">
                       <span>Kode: {{ buku.kode }}</span>
-                      
                       <span>Kategori: {{ buku.kategori }}</span>
                       <span>UPBJJ: {{ buku.upbjj }}</span>
                       <span>Lokasi Rak: {{ buku.lokasiRak }}</span>
-
                     </div>
                     
                     <div class="book-card-stock" v-bind:class="getStatusClass(buku)">
@@ -137,15 +144,15 @@
                     </div>
 
                     <div class="catatan" v-html="buku.catatanHTML"></div>
-
-                    <div class="card-actions">
+                  <div class="card-actions" style="margin-top: 10px; padding: 1rem; text-align: right;">
                         <button @click="bukaModeEdit(buku)" type="button">Edit</button>
                     </div>
 
                   </div>
               </article>
-          </div>
-        </section>
+              </div>
+
+         </section>
       </div>
       
     </section>
@@ -237,6 +244,7 @@
   </footer>
 
   <script src="js/vue.js"></script>
+  <script src="js/axios.js"></script>
   <script src="js/stok-app.js"></script>
   <script src="js/header.js"></script>
 

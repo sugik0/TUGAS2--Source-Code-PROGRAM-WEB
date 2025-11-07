@@ -3,56 +3,7 @@ var app = new Vue ({
   data: {
       upbjjList: ["Jakarta", "Surabaya", "Makassar", "Padang", "Denpasar"],
       kategoriList: ["MK Wajib", "MK Pilihan", "Praktikum", "Problem-Based"],
-      stok: [
-        {
-          kode: "EKMA4116",
-          judul: "Pengantar Manajemen",
-          kategori: "MK Wajib",
-          upbjj: "Jakarta", 
-          lokasiRak: "R1-A3",
-          harga: 65000,
-          qty: 28,
-          safety: 20,
-          catatanHTML: "<em>Edisi 2024, cetak ulang</em>",
-          cover: "img/ekma4116.jpg"
-        },
-        {
-          kode: "EKMA4115",
-          judul: "Pengantar Akuntansi",
-          kategori: "MK Wajib",
-          upbjj: "Jakarta",
-          lokasiRak: "R1-A4",
-          harga: 60000,
-          qty: 7,
-          safety: 15,
-          catatanHTML: "<strong>Cover baru</strong>",
-          cover: "img/ekma4115.jpg"
-        },
-        {
-          kode: "BIOL4110",
-          judul: "Biologi Umum (Praktikum)",
-          kategori: "Praktikum",
-          upbjj: "Surabaya",
-          lokasiRak: "R3-B2",
-          harga: 80000,
-          qty: 12,
-          safety: 10,
-          catatanHTML: "Butuh <u>pendingin</u> untuk kit basah",
-          cover: "img/biol4110.jpg"
-        },
-        {
-          kode: "ISIP4110",
-          judul: "Pengantar Sosiologi",
-          kategori: "MK Pilihan",
-          upbjj: "Makassar",
-          lokasiRak: "R2-C1",
-          harga: 55000,
-          qty: 2,
-          safety: 8,
-          catatanHTML: "Stok <i>menipis</i>, prioritaskan reorder",
-          cover: "img/isip4110.jpg"
-        }
-      ],
+      stok: [],
       filterLokasi: '',
       filterKategori: '',
       filterHanyaMenipis: false,
@@ -74,14 +25,24 @@ var app = new Vue ({
             cover: 'img/std_buku.jpg',
             edisi: 1
       },
-      bukuYangDiedit: null  
+      bukuYangDiedit: null,
+      isLoading: false,
+      error: null
 
+    },
+
+  created: function() {
+      this.ambilDataBuku();
     },
 
   computed: {
 
-      stokTampil: function() {
-            let daftar = this.stok;
+        stokTampil: function() {
+            // 1. BUAT SALINAN DARI 'this.stok' DENGAN .slice()
+            // 'daftar' sekarang adalah array baru yang aman untuk di-filter & sort
+            let daftar = this.stok.slice(); 
+
+            // 2. Terapkan filter (ini sudah benar)
             if (this.filterLokasi) {
                 daftar = daftar.filter(buku => buku.upbjj === this.filterLokasi);
             }
@@ -91,6 +52,8 @@ var app = new Vue ({
             if (this.filterHanyaMenipis) {
                 daftar = daftar.filter(buku => buku.qty < buku.safety || buku.qty === 0);
             }
+            
+            // 3. Terapkan sort (ini sudah benar)
             if (this.urutkanBerdasarkan === 'judul') {
                 daftar.sort((a, b) => a.judul.localeCompare(b.judul));
             } else if (this.urutkanBerdasarkan === 'harga') {
@@ -98,6 +61,8 @@ var app = new Vue ({
             } else if (this.urutkanBerdasarkan === 'stok') {
                 daftar.sort((a, b) => a.qty - b.qty);
             }
+            
+            // 4. Kembalikan array yang sudah diolah
             return daftar;
         },
 
@@ -119,6 +84,30 @@ var app = new Vue ({
     },
 
   methods: {
+
+    ambilDataBuku: function() {
+            var vm = this; 
+            vm.isLoading = true;
+            vm.error = null;
+
+            axios.get('api/api-buku.php')
+                .then(function (response) {
+
+                    // --- TAMBAHKAN BARIS INI ---
+                    console.log("API Berhasil! Data yang diterima:", response.data); 
+
+                    vm.stok = response.data; 
+                    vm.isLoading = false;
+                })
+                .catch(function (error) {
+                    // --- TAMBAHKAN BARIS INI ---
+                    console.error("API GAGAL:", error); 
+
+                    vm.error = "Gagal memuat data buku dari server.";
+                    vm.isLoading = false;
+                });
+        },
+
       getStatusClass: function(buku) {
           
         if (buku.qty === 0) {
