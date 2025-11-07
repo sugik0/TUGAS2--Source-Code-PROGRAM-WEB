@@ -1,0 +1,131 @@
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.card h2 {
+  margin-top: 0;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.75rem;
+  color: #333;
+}
+
+.stok-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.book-card {
+  background-color: #fdfdfd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.book-card-image {
+  width: 100%;
+  height: auto; 
+  object-fit: cover; 
+}
+
+.book-card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+}
+
+.book-card-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #004a99;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+  height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.book-card-details {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.75rem;
+  flex-grow: 1;
+}
+.book-card-details span {
+  display: block;
+}
+
+.book-card-stock {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+}
+.book-card-stock span {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #1a9c43;
+}
+
+#addStokForm h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem; 
+  text-align: center;
+  color: #004a99;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #f0f0f0; 
+  padding-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  color: #555;
+}
+
+#addStokForm input {
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#addStokForm input:focus {
+  outline: none; 
+  border-color: #004a99;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 74, 153, 0.1);
+}
+
+.status-kosong {
+  color: red;
+  font-weight: bold;
+}
+
+.status-menipis {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-aman {
+  color: green;
+}

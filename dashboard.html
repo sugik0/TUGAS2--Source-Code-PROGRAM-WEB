@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA - Sistem Pemesanan Bahan Ajar UT</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/header.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="main-header-nav">
+
+            <div class="nav-left">
+                <a href="dashboard.html">
+                    <img src="https://www.ut.ac.id/wp-content/uploads/2023/08/UT_Header.webp"
+                        alt="Logo Universitas Terbuka" class="logo">
+                </a>
+            </div>
+
+            <div class="nav-center">
+                <ul class="nav-menu">
+                    <li><a href="stok.html">Informasi Bahan Ajar</a></li>
+                    <li><a href="tracking.html">Tracking Pengiriman</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Laporan ▾</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Monitoring Progress DO</a></li>
+                            <li><a href="#">Rekap Bahan Ajar</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Histori Transaksi</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <div id="liveClock" class="clock-display"></div>
+                <img src="img/pp.jpg" alt="Foto Profil" class="profile-pic">
+                <span id="userNameDisplay">...</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+        </nav>
+    </header>
+
+    <main>
+        <section class="banner">
+            <div class="banner-content">
+                <h1 id="greeting"></h1>
+                <p class="subtitle">Selamat datang di sistem pemesanan bahan ajar Universitas Terbuka.</p>
+            </div>
+            <div class="gambar-welcome">
+                <img src="https://www.ut.ac.id/wp-content/uploads/2023/09/welcome-img.webp" class="gambar"
+                    alt="welcome">
+            </div>
+        </section>
+    </main>
+
+
+
+    <footer>
+        <p>&copy; 2025 Universitas Terbuka by I Putu Sugiarta. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script src="js/header.js"></script>
+
+</body>
+
+</html>

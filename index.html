@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SITTA - Sistem Pemesanan Bahan Ajar UT</title>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/header.css">
+</head>
+
+<body>
+
+  <header>
+    <nav class="main-header-nav">
+
+      <div class="nav-left">
+        <a href="index.html">
+          <img src="https://www.ut.ac.id/wp-content/uploads/2023/08/UT_Header.webp" alt="Logo Universitas Terbuka"
+            class="logo">
+        </a>
+      </div>
+
+      <div class="nav-center">
+      </div>
+
+      <div class="nav-right">
+        <button type="button" id="loginPopupBtn" class="login-btn">Login</button>
+      </div>
+
+    </nav>
+
+  </header>
+
+  <main>
+    <section class="banner">
+      <div class="banner-content">
+        <h1>SITTA</h1>
+        <p>Sistem Informasi Pemesanan dan Distribusi Bahan Ajar</p>
+        <p>Universitas Terbuka</p>
+      </div>
+      <div class="gambar-welcome">
+        <img src="https://www.ut.ac.id/wp-content/uploads/2023/09/welcome-img.webp" class="gambar" alt="welcome">
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Universitas Terbuka by I Putu Sugiarta. Hak Cipta Dilindungi.</p>
+  </footer>
+
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeLoginModal">&times;</span>
+
+      <form id="loginForm">
+        <h2>Login Akun SITTA</h2>
+        <div>
+          <label for="email">Email:</label>
+          <input type="email" id="email" required placeholder="default admin: admin@ut.ac.id">
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" required placeholder="default password: admin123">
+        </div>
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="login-links" style="margin-top: 15px; display: flex; justify-content: space-between;">
+        <a href="#" id="lupaPasswordLink">Lupa Password?</a>
+        <a href="#" id="daftarLink">Daftar</a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="js/data.js"></script>
+  <script src="js/landing.js"></script>
+
+</body>
+
+</html>

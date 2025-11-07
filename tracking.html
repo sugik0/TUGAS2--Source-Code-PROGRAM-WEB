@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITTA - Sistem Pemesanan Bahan Ajar UT</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tracking.css">
+    <link rel="stylesheet" href="css/header.css">
+</head>
+
+<body>
+
+    <header>
+        <nav class="main-header-nav">
+
+            <div class="nav-left">
+                <a href="dashboard.html">
+                    <img src="https://www.ut.ac.id/wp-content/uploads/2023/08/UT_Header.webp"
+                        alt="Logo Universitas Terbuka" class="logo">
+                </a>
+            </div>
+
+            <div class="nav-center">
+                <ul class="nav-menu">
+                    <li><a href="stok.html">Informasi Bahan Ajar</a></li>
+                    <li><a href="tracking.html">Tracking Pengiriman</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Laporan ▾</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Monitoring Progress DO</a></li>
+                            <li><a href="#">Rekap Bahan Ajar</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Histori Transaksi</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <div id="liveClock" class="clock-display"></div>
+                <img src="img/pp.jpg" alt="Foto Profil" class="profile-pic">
+                <span id="userNameDisplay">...</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+
+        </nav>
+    </header>
+
+
+    <main>
+        
+        <section class="banner">
+
+            <div class="banner-content">
+                <h1>Tracking Pengiriman</h1>
+                <p class="subtitle">Lacak status pengiriman Delivery Order (DO) Anda.</p>
+                <form id="trackingForm" class="tracking-form">
+                    <input type="text" id="nomorDO" placeholder="Contoh: 2023001234" required>
+                    <button type="submit" class="search-btn">Cari</button>
+                </form>
+            </div>
+
+            <section class="card" id="trackingResult" style="display: none;">
+                <h2>Hasil Pelacakan</h2>
+
+                <div class="result-summary">
+                    <div class="summary-item">
+                        <label>Nomor Delivery Order</label>
+                        <span id="nomorDOHasil" class="status-badge"></span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Nama Penerima</label>
+                        <span id="namaPenerima"></span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Status</label>
+                        <span id="statusPengiriman" class="status-badge"></span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Ekspedisi</label>
+                        <span id="ekspedisi"></span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Tanggal Kirim</label>
+                        <span id="tglKirim"></span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Tanggal Terima</label>
+                        <span id="tglTerima"></span>
+                    </div>
+                </div>
+
+                <h3 style="padding-left: 1.5rem;">Detail Perjalanan</h3>
+                <ul id="listPerjalanan" class="journey-list">
+                </ul>
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        <p>&copy; 2025 Universitas Terbuka by I Putu Sugiarta. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="js/tracking-app.js"></script>
+
+</body>
+</html>
