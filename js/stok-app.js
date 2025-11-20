@@ -35,7 +35,7 @@ var app = new Vue ({
 
   computed: {
 
-        stokTampil: function() {
+       stokTampil: function() {
             let daftar = this.stok.slice(); 
             if (this.filterLokasi) {
                 daftar = daftar.filter(buku => buku.upbjj === this.filterLokasi);
@@ -76,20 +76,41 @@ var app = new Vue ({
   methods: {
 
     ambilDataBuku: function() {
-            var vm = this; 
-            vm.isLoading = true;
-            vm.error = null;
+          var vm = this;
+          vm.isLoading = true;
+          vm.error = null;
 
-            axios.get('api/api-buku.php')
-                .then(function (response) {
-                    vm.stok = response.data; 
-                    vm.isLoading = false;
-                })
-                .catch(function (error) {
-                vm.error = "Gagal memuat data buku dari server.";
-                vm.isLoading = false;
-                });
-        },
+          const urlAPI = 'https://api.geprekndut.my.id/api.php';
+          const apiKey = '050300375';
+
+          axios.get(urlAPI, {
+              headers: {
+                  'Authorization': apiKey,
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then(function (response) {
+              vm.stok = response.data;
+              vm.isLoading = false;
+              console.log("Data diterima:", response.data);
+          })
+          .catch(function (error) {
+              vm.isLoading = false;
+
+              if (error.response) {
+                  if (error.response.status === 401) {
+                      vm.error = "Gagal Login API: Kunci Salah!";
+                  } else {
+                      vm.error = "Terjadi kesalahan server: " + error.response.status;
+                  }
+                  console.log("Pesan Server:", error.response.data);
+              } else if (error.request) {
+                  vm.error = "Tidak dapat terhubung ke server API (Cek Koneksi/Tunnel).";
+              } else {
+                  vm.error = "Error: " + error.message;
+              }
+          });
+      },
 
       getStatusClass: function(buku) {
           
